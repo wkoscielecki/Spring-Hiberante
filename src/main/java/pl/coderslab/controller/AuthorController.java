@@ -42,7 +42,6 @@ public class AuthorController {
         return "author/form";
     }
 
-
     @PostMapping("/edit/{id}")
     public String editAuthor(@ModelAttribute Author author, @PathVariable Long id, HttpServletRequest request) {
         authorDao.save(author);
