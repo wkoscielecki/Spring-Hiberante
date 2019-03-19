@@ -24,22 +24,24 @@ public class PersonController {
     }
 
     @PostMapping("/form")
-    public String form(Model model,
-                       @RequestParam String login,
-                       @RequestParam String password,
-                       @RequestParam String email
-                    ) {
-
-        Person person = new Person();
-        person.setLogin(login);
-        person.setPassword(password);
-        person.setEmail(email);
+    public String form(@ModelAttribute Person person) {
         personDao.save(person);
-        model.addAttribute("person", person);
-
         return "person/details";
     }
 
+
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable Long id) {
+        model.addAttribute("person", personDao.findById(id));
+        return "person/form";
+    }
+
+
+    @PostMapping("/edit/{id}")
+    public String edit(@ModelAttribute Person person, @PathVariable Long id) {
+        personDao.save(person);
+        return "person/details";
+    }
 
     @GetMapping("/add")
     @ResponseBody
