@@ -48,7 +48,6 @@ public class AuthorController {
         return "redirect:" + request.getContextPath() + "/author/list";
     }
 
-
     @RequestMapping("/delete/{id}")
     public String deleteAuthor(@PathVariable Long id, HttpServletRequest request) {
         authorDao.delete(authorDao.findById(id));
