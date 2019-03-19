@@ -3,10 +3,8 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.PersonDao;
 import pl.coderslab.entity.Person;
 import pl.coderslab.entity.PersonDetails;
@@ -17,6 +15,30 @@ public class PersonController {
 
     @Autowired
     PersonDao personDao;
+
+
+    @GetMapping("/form")
+    public String form(Model model) {
+        model.addAttribute("person", new Person());
+        return "person/form";
+    }
+
+    @PostMapping("/form")
+    public String form(Model model,
+                       @RequestParam String login,
+                       @RequestParam String password,
+                       @RequestParam String email
+                    ) {
+
+        Person person = new Person();
+        person.setLogin(login);
+        person.setPassword(password);
+        person.setEmail(email);
+        personDao.save(person);
+        model.addAttribute("person", person);
+
+        return "person/details";
+    }
 
 
     @GetMapping("/add")
