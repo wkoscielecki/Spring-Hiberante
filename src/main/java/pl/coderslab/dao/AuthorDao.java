@@ -27,7 +27,7 @@ public class AuthorDao {
     }
 
 
-    public List<Author> readAll() {
+    public List<Author> findAll() {
         Query query = entityManager.createQuery("SELECT author FROM Author author");
         List<Author> authorsList = query.getResultList();
         return authorsList;

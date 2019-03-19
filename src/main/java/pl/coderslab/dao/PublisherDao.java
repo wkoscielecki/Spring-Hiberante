@@ -27,8 +27,8 @@ public class PublisherDao {
         }
     }
 
-    public List<Publisher> readAll() {
-        Query query = entityManager.createQuery("SELECT publisher FROM Publisher publisher");
+    public List<Publisher> findAll() {
+        Query query = entityManager.createQuery("SELECT publisher FROM Publisher publisher order by publisher.name");
         List<Publisher> publisherList = query.getResultList();
         return publisherList;
     }

@@ -14,11 +14,26 @@ public class Author {
     private String firstName;
     private String lastName;
 
+    @Transient
+    private String fullName;
+
     @ManyToMany
     private List<Book> books = new ArrayList<>();
 
     public Author() {
     }
+
+
+    public Author(String firstName, String lastName, String fullName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
 
     public List<Book> getBooks() {
         return books;

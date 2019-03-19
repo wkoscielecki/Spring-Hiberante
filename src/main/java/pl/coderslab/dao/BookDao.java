@@ -34,8 +34,8 @@ public class BookDao {
     }
 
 
-    public List<Book> readAll() {
-        Query query = entityManager.createQuery("SELECT book FROM Book book");
+    public List<Book> findAll() {
+        Query query = entityManager.createQuery("SELECT book FROM Book book order by book.title");
         List<Book> bookList = query.getResultList();
         return bookList;
     }
