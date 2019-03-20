@@ -1,7 +1,6 @@
 package pl.coderslab.dao;
 
 import org.springframework.stereotype.Repository;
-import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 
 import javax.persistence.EntityManager;
@@ -26,7 +25,7 @@ public class BookDao {
         }
     }
 
-    private List<Book> getRatingList(int rating){
+    private List<Book> getRatingList(int rating) {
         Query query = entityManager.createQuery("SELECT book FROM Book book where rating>:rating");
         query.setParameter("rating", rating);
         List<Book> booksByRating = query.getResultList();
@@ -35,7 +34,7 @@ public class BookDao {
 
 
     public List<Book> findAll() {
-        Query query = entityManager.createQuery("SELECT book FROM Book book order by book.title");
+        Query query = entityManager.createQuery("SELECT book FROM Book book where book.proposition =false order by book.title");
         List<Book> bookList = query.getResultList();
         return bookList;
     }
@@ -60,4 +59,9 @@ public class BookDao {
     }
 
 
+    public List<Book> findAllInPropositonStage() {
+        Query query = entityManager.createQuery("SELECT book FROM Book book where book.proposition = true ");
+        List<Book> propositions = query.getResultList();
+        return propositions;
+    }
 }

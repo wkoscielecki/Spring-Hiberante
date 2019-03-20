@@ -3,6 +3,8 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
@@ -10,8 +12,11 @@ import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.validator.PropositionBookValidatorGroup;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.List;
 
 @Controller
@@ -27,6 +32,7 @@ public class BookController {
     @Autowired
     PublisherDao publisherDao;
 
+
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("book", new Book());
@@ -35,9 +41,13 @@ public class BookController {
 
 
     @PostMapping("/form")
-    public String form(@ModelAttribute Book book, HttpServletRequest request) {
+    public String form(@Validated({PropositionBookValidatorGroup.class, Default.class}) Book book, BindingResult bookErrors, HttpServletRequest request) {
+        if (bookErrors.hasErrors()) {
+            return "book/form";
+        }
         bookDao.save(book);
         return "redirect:" + request.getContextPath() + "/book/list";
+
     }
 
     @GetMapping("/list")
@@ -55,9 +65,16 @@ public class BookController {
 
 
     @PostMapping("/edit/{id}")
-    public String editBook(@ModelAttribute Book book, @PathVariable Long id, HttpServletRequest request) {
+    public String editBook(@Validated({PropositionBookValidatorGroup.class, Default.class}) Book book, BindingResult bookErrors, @PathVariable Long id, HttpServletRequest request) {
+        if (bookErrors.hasErrors()) {
+            return "book/form";
+        }
+        if (book.isProposition()){
+            book.setProposition(false);
+        }
         bookDao.save(book);
         return "redirect:" + request.getContextPath() + "/book/list";
+
 
     }
 
@@ -85,48 +102,5 @@ public class BookController {
     public List<Author> authorList() {
         return authorDao.findAll();
     }
-
-
-    ///////// stare
-
-//    @GetMapping("/testadd")
-//    @ResponseBody
-//    public void testAdd() {
-//
-//        Author author = new Author();
-//        author.setFirstName("Evan");
-//        author.setLastName("Currie");
-//        authorDao.save(author);
-//
-//        Book book = new Book();
-//        book.getAuthors().add(author);
-//        book.setTitle("Odysey One");
-//        book.setRating(6);
-//        bookDao.save(book);
-//    }
-
-
-//    @GetMapping("/{bookId}")
-//    @ResponseBody
-//    public String getBookById(@PathVariable Long bookId) {
-//        return bookDao.findById(bookId).toString();
-//    }
-//
-//
-//    @GetMapping("/update/{bookId}")
-//    @ResponseBody
-//    public void updateBook(@PathVariable Long bookId) {
-//        Book bookToUpdate = bookDao.findById(bookId);
-//        bookToUpdate.setTitle("Inny tytuł");
-//        bookDao.save(bookToUpdate);
-//    }
-//
-//    @GetMapping("/delete/{bookId}")
-//    @ResponseBody
-//    public void deleteBook(@PathVariable Long bookId) {
-//        Book bookToDelete = bookDao.findById(bookId);
-//        bookDao.delete(bookToDelete);
-//    }
-
 
 }

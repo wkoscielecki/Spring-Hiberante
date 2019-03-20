@@ -1,6 +1,13 @@
 package pl.coderslab.entity;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import pl.coderslab.validator.PropositionBookValidatorGroup;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,25 +17,44 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(min = 5)
     private String title;
+
+    @Min(value = 1, groups = {PropositionBookValidatorGroup.class})
+    @Max(value = 10, groups = {PropositionBookValidatorGroup.class})
     private int rating;
 
+    @NotEmpty(groups = {PropositionBookValidatorGroup.class})
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Author> authors = new ArrayList<>();
 
+    @NotNull(groups = {PropositionBookValidatorGroup.class})
     @ManyToOne
     private Publisher publisher;
+    @Size(max = 600)
     @Column(columnDefinition = "Text")
     private String description;
+
+
+    private boolean proposition;
 
     public Book() {
 
     }
 
+    public boolean isProposition() {
+        return proposition;
+    }
+
+    public void setProposition(boolean proposition) {
+        this.proposition = proposition;
+    }
+
     @Override
     public String toString() {
         StringBuilder authorStringBuilder = new StringBuilder();
-        authors.forEach(author -> authorStringBuilder.append(author.getFirstName()).append(" ").append(author.getLastName()) );
+        authors.forEach(author -> authorStringBuilder.append(author.getFirstName()).append(" ").append(author.getLastName()));
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +

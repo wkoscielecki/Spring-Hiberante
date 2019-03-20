@@ -16,6 +16,8 @@
 
 <h2>Books</h2>
 <a href="${pageContext.request.contextPath}/book/form">Add book</a>
+<a href="${pageContext.request.contextPath}/proposition/form">Add new proposition</a>
+<a href="${pageContext.request.contextPath}/proposition/list">Book proposition</a>
 
 <c:forEach items="${books}" var="book">
     <li>

@@ -18,7 +18,15 @@
 <a href="${pageContext.request.contextPath}/publisher/list">Back to list</a>
 
 <form:form modelAttribute="publisher" method="post">
+
     <form:input path="name" placeholder="name"/>
+    <form:errors path="name" element="div"/>
+    <form:input path="nip" placeholder="nip"/>
+    <form:errors path="nip" element="div"/>
+    <form:input path="regon" placeholder="regon"/>
+    <form:errors path="regon" element="div"/>
+
+
     <input type="submit">
 </form:form>
 

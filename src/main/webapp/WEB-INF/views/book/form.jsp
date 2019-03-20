@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: pawel
@@ -11,8 +12,8 @@
 <head>
     <title>Title</title>
     <style>
-        form input,select{
-            display:block;
+        form input, select {
+            display: block;
             margin: 15px 0;
         }
 
@@ -23,17 +24,33 @@
 <h2>Book Form</h2>
 <a href="${pageContext.request.contextPath}/book/list">Back to list</a>
 
+
+<%--<c:if test="${not empty errors}">--%>
+<%--<ul>--%>
+<%--<c:forEach items="${errors}" var="err">--%>
+<%--<li>${err.propertyPath} : ${err.message}</li>--%>
+<%--</c:forEach>--%>
+<%--</ul>--%>
+<%--</c:if>--%>
+
+
 <form:form modelAttribute="book" method="post">
     <%--<form:hidden path="id"/>--%>
     Title: <form:input path="title" placeholder="Title"/>
+    <form:errors path="title" element="div"/>
     Rating: <form:input path="rating" placeholder="Rating"/>
-    Authors:<form:select path="authors" multiple="true" >
-        <form:options items="${authors}" itemValue="id" itemLabel="fullName"/>
-    </form:select>
+    <form:errors path="rating" element="div"/>
+    Description: <form:input path="description" placeholder="Description"/>
+    <form:errors path="description" element="div"/>
+
+    Authors:<form:select path="authors" multiple="true">
+    <form:options items="${authors}" itemValue="id" itemLabel="fullName"/>
+</form:select>
+    <form:errors path="authors" element="div"/>
     Publisher: <form:select path="publisher" items="${publishers}" itemLabel="name" itemValue="id"/>
+    <form:errors path="publisher" element="div"/>
 
     <input type="submit" value="Save">
-
 
 </form:form>
 
