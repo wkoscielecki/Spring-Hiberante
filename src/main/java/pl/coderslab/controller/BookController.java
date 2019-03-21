@@ -11,11 +11,13 @@ import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
+import pl.coderslab.entity.Category;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.repository.BookRepository;
+import pl.coderslab.repository.CategoryRepository;
 import pl.coderslab.validator.PropositionBookValidatorGroup;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.List;
 
@@ -31,14 +33,16 @@ public class BookController {
 
     @Autowired
     PublisherDao publisherDao;
-
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    BookRepository bookRepository;
 
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("book", new Book());
         return "book/form";
     }
-
 
     @PostMapping("/form")
     public String form(@Validated({PropositionBookValidatorGroup.class, Default.class}) Book book, BindingResult bookErrors, HttpServletRequest request) {
@@ -51,11 +55,15 @@ public class BookController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("books", bookDao.findAll());
+    public String list(Model model, HttpServletRequest request) {
+        String catId = request.getParameter("catid");
+        if (catId != null) {
+            model.addAttribute("books", bookRepository.findAllByCategoryId(Long.parseLong(catId)));
+        } else {
+            model.addAttribute("books", bookDao.findAll());
+        }
         return "book/list";
     }
-
 
     @RequestMapping("/edit/{id}")
     public String editBook(Model model, @PathVariable Long id) {
@@ -63,13 +71,12 @@ public class BookController {
         return "book/form";
     }
 
-
     @PostMapping("/edit/{id}")
     public String editBook(@Validated({PropositionBookValidatorGroup.class, Default.class}) Book book, BindingResult bookErrors, @PathVariable Long id, HttpServletRequest request) {
         if (bookErrors.hasErrors()) {
             return "book/form";
         }
-        if (book.isProposition()){
+        if (book.isProposition()) {
             book.setProposition(false);
         }
         bookDao.save(book);
@@ -78,20 +85,17 @@ public class BookController {
 
     }
 
-
     @RequestMapping("/delete/{id}")
     public String deleteBook(Model model, @PathVariable Long id) {
         model.addAttribute("book", bookDao.findById(id));
         return "book/delete";
     }
 
-
     @RequestMapping("/delete/true/{id}")
     public String deleteBook(@ModelAttribute Book book, @PathVariable Long id, HttpServletRequest request) {
         bookDao.delete(book);
         return "redirect:" + request.getContextPath() + "/book/list";
     }
-
 
     @ModelAttribute("publishers")
     public List<Publisher> publisherList() {
@@ -103,4 +107,10 @@ public class BookController {
         return authorDao.findAll();
     }
 
+    @ModelAttribute("categories")
+    public List<Category> categoryList() {
+        return categoryRepository.findAll();
+    }
 }
+
+

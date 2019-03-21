@@ -37,10 +37,21 @@ public class Book {
     private String description;
 
 
+    @ManyToOne
+    private Category category;
+
     private boolean proposition;
 
     public Book() {
 
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public boolean isProposition() {

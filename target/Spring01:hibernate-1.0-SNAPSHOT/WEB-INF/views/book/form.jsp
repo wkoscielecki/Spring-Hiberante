@@ -42,13 +42,14 @@
     <form:errors path="rating" element="div"/>
     Description: <form:input path="description" placeholder="Description"/>
     <form:errors path="description" element="div"/>
-
     Authors:<form:select path="authors" multiple="true">
     <form:options items="${authors}" itemValue="id" itemLabel="fullName"/>
 </form:select>
     <form:errors path="authors" element="div"/>
     Publisher: <form:select path="publisher" items="${publishers}" itemLabel="name" itemValue="id"/>
     <form:errors path="publisher" element="div"/>
+    Category: <form:select path="category.id" items="${categories}" itemLabel="name" itemValue="id"/>
+    <form:errors path="category" element="div"/>
 
     <input type="submit" value="Save">
 
